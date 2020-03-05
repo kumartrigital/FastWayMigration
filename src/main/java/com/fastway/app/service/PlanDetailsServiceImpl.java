@@ -30,7 +30,7 @@ public class PlanDetailsServiceImpl {
 	public int addPlanResult(@RequestBody CustomerDto dto) {
 		int result = 200;
 		String addPlanOpCodeString = "MSO_OP_CUST_ADD_PLAN";
-		String addPlanXMlRequest = addPlanXmlRequest.extractAddPlanXMlRequest(dto.getAccountNO());
+		String addPlanXMlRequest = addPlanXmlRequest.extractAddPlanXMlRequest(dto);
 
 		int brmResponseResult = addPlanXmlRequest.processBRMRequest(addPlanOpCodeString, addPlanXMlRequest);
 

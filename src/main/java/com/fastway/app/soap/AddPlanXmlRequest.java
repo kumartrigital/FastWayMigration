@@ -1,10 +1,16 @@
 package com.fastway.app.soap;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
+
+import com.BRM.CATV.AddPlan.PLANElement;
+import com.fastway.app.dto.CustomerDto;
+import com.fastway.app.dto.PlanDetailsDto;
+import com.fastway.app.entity.PlanDetails;
 
 import _36._0._21._172.infranetwebsvc.services.brmbaseservices.InfranetWebServiceServiceStub;
 import _36._0._21._172.infranetwebsvc.services.brmbaseservices.InfranetWebServiceServiceStub.Opcode;
@@ -12,16 +18,18 @@ import _36._0._21._172.infranetwebsvc.services.brmbaseservices.InfranetWebServic
 
 public class AddPlanXmlRequest {
 
-	public String extractAddPlanXMlRequest(String userID) {
 
-		if (plan_list != null) {
+	public String extractAddPlanXMlRequest(CustomerDto dto) {
+
+		List<PlanDetailsDto> planDetails =  dto.getPlanList();
+		if (planDetails != null) {
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			stringBuffer.append("<MSO_OP_CUST_ADD_PLAN_inputFlist>");
-			stringBuffer.append("<POID>" + ACCOUNT_POID + "</POID>");
-			stringBuffer.append("<SERVICE_OBJ>" + SERVICE_OBJ + "</SERVICE_OBJ>");
-			for (int i = 0; i < plan_list.length; i++) {
-				PLANElement[] plans = plan_list[i].getPlans();
+			stringBuffer.append("<POID>" + dto.getAccountPoid() + "</POID>");
+			stringBuffer.append("<SERVICE_OBJ>" + dto.getServiceObj() + "</SERVICE_OBJ>");
+			for (int i = 0; i < planDetails.size(); i++) {
+				PLANElement[] plans = planDetails.get(i).getPlans();
 				for (int j = 0; j < plans.length; j++) {
 					stringBuffer.append("<PLAN_LISTS elem=\'" + j + "\'>");
 					stringBuffer.append("<PLAN_OBJ>" + plans[j].getPoid() + "</PLAN_OBJ>");
@@ -29,10 +37,10 @@ public class AddPlanXmlRequest {
 				}
 			}
 			// stringBuffer.append("<PROGRAM_NAME>FWFOS|"+validator.getUserID()+"_"+validator.getDeviceIMEI()+"</PROGRAM_NAME>");
-			stringBuffer.append("<PROGRAM_NAME>FWFOS|" + validator.getUserID() + "</PROGRAM_NAME>");
+			//stringBuffer.append("<PROGRAM_NAME>FWFOS|" + validator.getUserID() + "</PROGRAM_NAME>");
 			stringBuffer.append("<DESCR>Others</DESCR>");
 			// stringBuffer.append("<USERID>0.0.0.1 /account 115000 0</USERID>");
-			stringBuffer.append("<USERID>" + userID + "</USERID>");
+			stringBuffer.append("<USERID>" + dto + "</USERID>");
 			stringBuffer.append("</MSO_OP_CUST_ADD_PLAN_inputFlist>");
 			String addPlanXML = stringBuffer.toString();
 			System.out.println("Add Plan XML: \n");
